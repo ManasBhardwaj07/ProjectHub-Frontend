@@ -6,7 +6,7 @@ This is the React.js frontend for **ProjectHub**, a real-time project & task col
 
 ## 🌐 Live Demo
 
-🔗 [https://your-vercel-link.vercel.app](https://your-vercel-link.vercel.app)
+🔗 [https://project-hub-frontend-mocha.vercel.app](https://project-hub-frontend-mocha.vercel.app)
 
 > Replace with your actual Vercel link after deployment.
 
