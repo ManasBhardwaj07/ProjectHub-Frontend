@@ -12,9 +12,14 @@
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@hello-pangea/dnd": "^18.0.1",
+    "@react-oauth/google": "^0.12.2",
     "axios": "^1.10.0",
     "date-fns": "^4.1.0",
-    "framer-motion": "^12.23.0",
+    "dotenv": "^17.2.0",
+    "framer-motion": "^12.23.6",
+    "fuse.js": "^7.1.0",
+    "openai": "^5.9.2",
+    "prop-types": "^15.8.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",
@@ -22,6 +27,7 @@
     "react-router-dom": "^7.6.2",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
+    "string-strip-html": "^13.4.12",
     "use-debounce": "^10.0.5"
   },
   "devDependencies": {
