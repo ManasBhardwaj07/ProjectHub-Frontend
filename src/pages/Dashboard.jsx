@@ -2,12 +2,8 @@ import { useEffect, useState, useRef, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDebounce } from 'use-debounce';
-// import ProjectForm from '../components/ProjectForm'; // Old import
-// import ProjectList from '../components/ProjectList'; // Old import
-// import ViewProjectModal from '../components/ViewProjectModal'; // Old import
 import axios from '../api/axios';
 import socket from '../socket';
-// import toast from 'react-hot-toast'; // Example toast library - install if needed
 
 // Lazy load components for performance optimization
 const ProjectForm = lazy(() => import('../components/ProjectForm'));
@@ -56,18 +52,18 @@ const LogoutButton = ({ onClick, darkMode }) => {
 
   return (
     <motion.div className="relative">
-      <AnimatePresence mode="wait"> {/* Use AnimatePresence with mode="wait" for smooth transition between states */}
+      <AnimatePresence mode="wait">
         {isConfirming ? (
           <motion.div
-            key="confirm-state" // Unique key for AnimatePresence
-            initial={{ opacity: 0, x: 20 }} // Starts further right for a clearer slide
+            key="confirm-state"
+            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }} // Ensures it slides out
-            transition={{ duration: 0.25, ease: "easeOut" }} // Slightly increased duration
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
             className="flex gap-2"
           >
             <motion.button
-              whileHover={{ scale: 1.05 }} // Increased hover scale
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onClick}
               className={`px-3 py-1.5 rounded-md text-sm font-medium ${
@@ -75,12 +71,12 @@ const LogoutButton = ({ onClick, darkMode }) => {
                   ? 'bg-red-600 hover:bg-red-700 text-white'
                   : 'bg-red-500 hover:bg-red-600 text-white'
               }`}
-              transition={{ type: "spring", stiffness: 500, damping: 25 }} // Spring effect
+              transition={{ type: "spring", stiffness: 500, damping: 25 }}
             >
               Confirm
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.05 }} // Increased hover scale
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsConfirming(false)}
               className={`px-3 py-1.5 rounded-md text-sm font-medium ${
@@ -88,14 +84,14 @@ const LogoutButton = ({ onClick, darkMode }) => {
                   ? 'bg-gray-700 hover:bg-gray-600'
                   : 'bg-gray-200 hover:bg-gray-300'
               }`}
-              transition={{ type: "spring", stiffness: 500, damping: 25 }} // Spring effect
+              transition={{ type: "spring", stiffness: 500, damping: 25 }}
             >
               Cancel
             </motion.button>
           </motion.div>
         ) : (
           <motion.button
-            key="logout-button" // Unique key for AnimatePresence
+            key="logout-button"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsConfirming(true)}
@@ -105,7 +101,7 @@ const LogoutButton = ({ onClick, darkMode }) => {
                 : 'bg-gradient-to-r from-red-500 to-red-600 hover:shadow-red-500/30'
             }`}
             aria-label="Logout"
-            transition={{ type: "spring", stiffness: 500, damping: 25 }} // Spring effect
+            transition={{ type: "spring", stiffness: 500, damping: 25 }}
           >
             <LogoutIcon className="w-5 h-5 text-white" />
             <span className="text-white font-medium">Logout</span>
@@ -124,11 +120,11 @@ export default function Dashboard() {
   const [projects, setProjects] = useState([]);
   const projectsRef = useRef([]);
   const [search, setSearch] = useState('');
-  const searchInputRef = useRef(null); // Ref for search input for keyboard navigation
+  const searchInputRef = useRef(null);
   const [debouncedSearch] = useDebounce(search, 300);
   const [viewProject, setViewProject] = useState(null);
   const [darkMode, setDarkMode] = useState(
-    window.matchMedia('(prefers-color-scheme: dark)').matches // System preference detection
+    window.matchMedia('(prefers-color-scheme: dark)').matches
   );
   const [isLoading, setIsLoading] = useState(true);
 
@@ -150,9 +146,8 @@ export default function Dashboard() {
       document.documentElement.classList.remove('dark');
       localStorage.setItem('darkMode', 'false');
     }
-    // Apply font styles globally
     document.documentElement.style.fontFamily = darkMode ? "'Inter', sans-serif" : "'Inter', sans-serif";
-    document.documentElement.style.setProperty('--font-poppins', 'Poppins'); // For headings
+    document.documentElement.style.setProperty('--font-poppins', 'Poppins');
   }, [darkMode]);
 
   // Fetch projects and setup socket listeners
@@ -178,12 +173,11 @@ export default function Dashboard() {
 
     fetchProjects();
 
-    // WebSocket event listeners for real-time updates
+    // WebSocket event listeners
     socket.on('project:created', (newProject) => {
       const exists = projectsRef.current.find(p => p._id === newProject._id);
       if (!exists) {
         setProjects([newProject, ...projectsRef.current]);
-        // toast.success(`Project "${newProject.name}" created!`); // Integrate a toast library here
       }
     });
 
@@ -191,12 +185,10 @@ export default function Dashboard() {
       setProjects(projectsRef.current.map(p =>
         p._id === updated._id ? updated : p
       ));
-      // toast.success(`Project "${updated.name}" updated!`); // Integrate a toast library here
     });
 
     socket.on('project:deleted', (deletedId) => {
       setProjects(projectsRef.current.filter(p => p._id !== deletedId));
-      // toast.error(`Project deleted!`); // Integrate a toast library here
     });
 
     return () => {
@@ -206,14 +198,13 @@ export default function Dashboard() {
     };
   }, [token, navigate]);
 
-  // Keyboard navigation for search (⌘ + / or Ctrl + /)
+  // Keyboard navigation for search
   useEffect(() => {
     const handleKeyDown = (event) => {
       if ((event.metaKey || event.ctrlKey) && event.key === '/') {
         event.preventDefault();
         searchInputRef.current?.focus();
       }
-      // Implement ↑/↓ navigation for projects here if needed (more complex, usually in ProjectList)
     };
 
     document.addEventListener('keydown', handleKeyDown);
@@ -221,7 +212,6 @@ export default function Dashboard() {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
-
 
   const handleLogout = () => {
     localStorage.clear();
@@ -234,34 +224,34 @@ export default function Dashboard() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }} // Subtle "rise in"
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }} // Smoother ease
+      transition={{ duration: 0.6, ease: "easeOut" }}
       className={`min-h-screen p-4 md:p-8 transition-colors duration-300 ${
         darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'
       }`}
-      style={{ fontFamily: 'Inter, sans-serif' }} // Apply Inter font globally
+      style={{ fontFamily: 'Inter, sans-serif' }}
     >
       {/* Header */}
       <motion.header
-        initial={{ y: -50, opacity: 0 }} // Starts higher for a noticeable drop-in
+        initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.7, ease: "easeOut" }} // Slightly longer duration for header
+        transition={{ duration: 0.7, ease: "easeOut" }}
         className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10"
       >
         <motion.h1
           className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent"
-          whileHover={{ scale: 1.01 }} // Slightly reduced hover scale for subtlety
-          transition={{ type: "spring", stiffness: 400, damping: 15 }} // Spring effect on hover
-          style={{ fontFamily: 'Poppins, sans-serif' }} // Apply Poppins font for headings
+          whileHover={{ scale: 1.01 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
+          style={{ fontFamily: 'Poppins, sans-serif' }}
         >
           Welcome, {user?.name || 'User'}
         </motion.h1>
 
-        <motion.div // Wrap action buttons for orchestrated entrance
-          initial={{ x: 50, opacity: 0 }} // Slide in from the right
+        <motion.div
+          initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }} // Slight delay for this group
+          transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
           className="flex gap-4 items-center"
         >
           {/* Mode Toggle Button */}
@@ -269,13 +259,13 @@ export default function Dashboard() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setDarkMode(!darkMode)}
-            className={`p-2 rounded-full transition-colors duration-200 ${ // Added duration for direct class transition
+            className={`p-2 rounded-full transition-colors duration-200 ${
               darkMode
                 ? 'bg-blue-900/30 hover:bg-blue-900/40 text-blue-400'
                 : 'bg-blue-100 hover:bg-blue-200 text-blue-600'
             }`}
             aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-            transition={{ type: "spring", stiffness: 500, damping: 25 }} // Spring effect for dark mode toggle
+            transition={{ type: "spring", stiffness: 500, damping: 25 }}
           >
             {darkMode ? (
               <SunIcon className="h-5 w-5" />
@@ -291,60 +281,65 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <motion.main
-        initial={{ opacity: 0, y: 30 }} // Slides up from slightly below
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.7, ease: "easeOut" }} // Delayed and smoother transition
-        className="space-y-8 px-2 md:px-0" // Adjusted padding for main content
+        transition={{ delay: 0.2, duration: 0.7, ease: "easeOut" }}
+        className="space-y-8 px-2 md:px-0 max-w-7xl mx-auto"
       >
-        <Suspense fallback={
-          <motion.div
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="rounded-lg h-32 w-full max-w-2xl mx-auto mb-8 bg-gray-200 dark:bg-gray-700 shadow-md"
-          />
-        }>
+        {/* Combined form and search container */}
+        <div className="flex flex-col md:flex-row gap-6 items-start md:items-end justify-between w-full">
           {/* Project Creation Form */}
-          <ProjectForm
-            setProjects={setProjects}
-            token={token}
-            darkMode={darkMode}
-          />
-        </Suspense>
-
-        {/* Search Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }} // Slides up from slightly below
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }} // Adjusted delay and duration
-          className="relative max-w-2xl mx-auto"
-        >
-          <div className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none ${
-            darkMode ? 'text-gray-400' : 'text-gray-500'
-          }`}>
-            <SearchIcon className="h-5 w-5" />
+          <div className="w-full md:w-2/3">
+            <Suspense fallback={
+              <motion.div
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="rounded-lg h-32 w-full bg-gray-200 dark:bg-gray-700 shadow-md"
+              />
+            }>
+              <ProjectForm
+                setProjects={setProjects}
+                token={token}
+                darkMode={darkMode}
+              />
+            </Suspense>
           </div>
-          <input
-            ref={searchInputRef} // Assign ref for keyboard focus
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search projects..."
-            className={`w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none transition-all duration-200 ${
-              darkMode
-                ? 'bg-gray-800 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 border-gray-700'
-                : 'bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-400 border-gray-300'
-            } border`}
-            aria-label="Search projects"
-          />
-        </motion.div>
+          
+          {/* Search Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+            className="w-full md:w-1/3"
+          >
+            <div className={`relative ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <div className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none`}>
+                <SearchIcon className="h-5 w-5" />
+              </div>
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search projects..."
+                className={`w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none transition-all duration-200 ${
+                  darkMode
+                    ? 'bg-gray-800 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 border-gray-700'
+                    : 'bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-400 border-gray-300'
+                } border`}
+                aria-label="Search projects"
+              />
+            </div>
+          </motion.div>
+        </div>
 
         {/* Loading State */}
         <AnimatePresence>
           {isLoading && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }} // Fades in with a slight zoom
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }} // Fades out with a slight zoom
+              exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
               className="py-16 space-y-4 flex flex-col items-center"
             >
@@ -359,9 +354,9 @@ export default function Dashboard() {
                 className={`text-center max-w-xs ${
                   darkMode ? 'text-gray-400' : 'text-gray-500'
                 }`}
-                initial={{ opacity: 0, y: 10 }} // Text slides up
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.4, ease: "easeOut" }} // Delayed and smoother
+                transition={{ delay: 0.1, duration: 0.4, ease: "easeOut" }}
                 style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 Gathering your projects...
@@ -373,7 +368,7 @@ export default function Dashboard() {
         {/* Project List */}
         <Suspense fallback={
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => ( // Render 6 skeleton cards
+            {[...Array(6)].map((_, i) => (
               <motion.div
                 key={i}
                 animate={{ opacity: [0.5, 1, 0.5] }}
@@ -398,23 +393,23 @@ export default function Dashboard() {
       {/* Project View Modal */}
       <AnimatePresence>
         {viewProject && (
-          <motion.div // Backdrop for the modal
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-            onClick={() => setViewProject(null)} // Close modal on backdrop click
+            onClick={() => setViewProject(null)}
           >
             <motion.div
-              initial={{ y: -50, opacity: 0, scale: 0.9 }} // Modal slides down, fades in, and slightly scales up
+              initial={{ y: -50, opacity: 0, scale: 0.9 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
-              exit={{ y: -50, opacity: 0, scale: 0.9 }} // Slides up, fades out, and scales down on exit
+              exit={{ y: -50, opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
               className={`relative rounded-lg p-6 w-full max-w-lg ${
                 darkMode ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-900'
               } shadow-2xl`}
-              onClick={(e) => e.stopPropagation()} // Prevent backdrop click from closing modal when clicking inside
+              onClick={(e) => e.stopPropagation()}
             >
               <Suspense fallback={
                 <motion.div

@@ -1,66 +1,51 @@
+// pages/ForgetPassword.jsx
+
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from '../api/axios';
-import { useNavigate } from 'react-router-dom';
+import AuthLayout from '../components/AuthLayout';
+import { AnimatedInput, AnimatedButton } from '../components/AuthUI';
 
 export default function ForgetPassword() {
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState(null);
-  const [error, setError] = useState(null);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
   const [isSending, setIsSending] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSending(true);
-    setMessage(null);
-    setError(null);
-
+    setMessage('');
+    setError('');
     try {
       const res = await axios.post('/auth/forgot-password', { email });
-      setMessage(res.data.message || 'Reset link sent to your email.');
+      setMessage(res.data.message || 'If an account exists, a reset link has been sent.');
+      setEmail('');
     } catch (err) {
-      console.error(err);
-      setError(err.response?.data?.message || 'Something went wrong');
+      setError(err.response?.data?.message || 'An error occurred.');
     } finally {
       setIsSending(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-purple-600 px-4">
-      <div className="bg-white shadow-xl rounded-lg p-8 max-w-md w-full">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">🔐 Forgot Password</h2>
+    <AuthLayout>
+      <header className="mb-8 text-center">
+        <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Forgot Password?</h2>
+        <p className="mt-2 text-gray-600">Enter your email and we'll send a reset link.</p>
+      </header>
 
-        {message && <div className="bg-green-100 text-green-800 text-sm px-4 py-2 rounded mb-4">{message}</div>}
-        {error && <div className="bg-red-100 text-red-800 text-sm px-4 py-2 rounded mb-4">{error}</div>}
+      {message && <div className="mb-4 rounded-lg bg-green-50 p-3 text-green-700 text-sm shadow-sm">{message}</div>}
+      {error && <div className="mb-4 rounded-lg bg-red-50 p-3 text-red-700 text-sm shadow-sm">{error}</div>}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <button
-            type="submit"
-            disabled={isSending}
-            className={`w-full py-2 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700 transition ${
-              isSending ? 'opacity-60 cursor-not-allowed' : ''
-            }`}
-          >
-            {isSending ? 'Sending...' : 'Send Reset Link'}
-          </button>
-        </form>
+      <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+        <AnimatedInput id="email" label="Email Address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email address" autoComplete="email" />
+        <AnimatedButton isSubmitting={isSending} text="Send Reset Link" loadingText="Sending..." />
+      </form>
 
-        <button
-          className="mt-4 text-sm text-blue-500 hover:underline"
-          onClick={() => navigate('/login')}
-        >
-          ← Back to Login
-        </button>
+      <div className="mt-6 text-center text-sm">
+        <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">← Back to Login</Link>
       </div>
-    </div>
+    </AuthLayout>
   );
 }
