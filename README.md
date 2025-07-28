@@ -34,12 +34,8 @@ For **local development**:
 VITE_API_BASE_URL=http://localhost:5000/api
 VITE_SOCKET_URL=http://localhost:5000
 
-For deployment (Vercel):
-VITE_API_BASE_URL=https://projecthub-backend-4mpw.onrender.com/api
-VITE_SOCKET_URL=https://projecthub-backend-4mpw.onrender.com
-```
 
----
+```
 
 ## 🔧 Local Development
 
@@ -78,8 +74,6 @@ App will run on: `http://localhost:5173`
   ]
 }
 ```
-
----
 
 ## 📄 License
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
