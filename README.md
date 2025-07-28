@@ -1,48 +1,85 @@
-# 🚀 ProjectHub Frontend – Real-Time Collaboration UI
+# 🎨 ProjectHub – Frontend
 
-This is the React.js frontend for **ProjectHub**, a real-time project & task collaboration platform with Kanban-style boards and live sync via Socket.IO.
-
----
-
-## 🌐 Live Demo
-
-🔗 [https://project-hub-frontend-mocha.vercel.app](https://project-hub-frontend-mocha.vercel.app)
-
-> Replace with your actual Vercel link after deployment.
-
----
-
-## 📸 Screenshot
-
-![ProjectHub Screenshot](./screenshot.png)
+This is the **frontend** for **ProjectHub**, a beautiful real-time project and task collaboration platform built with **React.js** and styled using **TailwindCSS** and **Framer Motion**.
 
 ---
 
 ## ✨ Features
 
-- 🔐 Login/Register with Email + Google OAuth
-- 🌙 Dark/Light Mode
-- 🗂 Project Creation, Editing, Deletion
-- ✅ Drag-and-Drop Task Management
-- 🔁 Real-time Sync via Socket.IO
-- 🔍 Search + Filter Projects
+- 🔐 Login, Register, Forget & Reset Password functionality
+- 🔒 Token-based authentication with protected routes
+- 🧱 Kanban board with drag-and-drop for task status
+- 📝 Create, edit, delete, and filter projects
+- ⚡ Real-time project & task sync via **Socket.IO**
+- 🌗 Light/Dark mode toggle
+- 📱 Fully responsive for all screen sizes
 
 ---
 
-## 🛠 Tech Stack
+## 🧰 Tech Stack
 
-- React.js
-- TailwindCSS
-- Axios
-- Vite
-- Socket.IO Client
+- **React.js**
+- **Vite**
+- **Tailwind CSS**
+- **Framer Motion**
+- **Socket.IO Client**
+- **Axios**
 
 ---
 
-## 🚀 Getting Started
+## 🌍 Environment Variables (`.env`)
 
+For **local development**:
+```env
+VITE_API_BASE_URL=http://localhost:5000/api
+VITE_SOCKET_URL=http://localhost:5000
+
+For deployment (Vercel):
+VITE_API_BASE_URL=https://projecthub-backend-4mpw.onrender.com/api
+VITE_SOCKET_URL=https://projecthub-backend-4mpw.onrender.com
+```
+
+---
+
+## 🔧 Local Development
+
+1. Clone the repo:
 ```bash
-git clone https://github.com/ManasBhardwaj07/projecthub-frontend.git
-cd projecthub-frontend
+git clone https://github.com/ManasBhardwaj07/ProjectHub-Frontend.git
+cd ProjectHub-Frontend
+```
+
+2. Create `.env` file using template above.
+
+3. Install dependencies:
+```bash
 npm install
+```
+
+4. Start the dev server:
+```bash
 npm run dev
+```
+
+App will run on: `http://localhost:5173`
+
+---
+
+## 🚀 Deployment (Vercel)
+
+- Push the repo to GitHub
+- Import into [Vercel](https://vercel.com)
+- Set `.env` variables in **Project Settings > Environment Variables**
+- Add a `vercel.json` file for React Router:
+```json
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
+}
+```
+
+---
+
+## 📄 License
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
