@@ -129,8 +129,8 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user'));
-  const token = localStorage.getItem('token');
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  const token = sessionStorage.getItem('token');
 
   // Sync projectsRef with state
   useEffect(() => {
@@ -214,7 +214,7 @@ export default function Dashboard() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     navigate('/login');
   };
 

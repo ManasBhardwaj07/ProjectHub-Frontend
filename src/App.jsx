@@ -1,5 +1,3 @@
-// App.jsx
-
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -10,14 +8,14 @@ import ResetPassword from './pages/ResetPassword';
 // Helper component 1: Protects routes that require a user to be logged in.
 // If not logged in, it redirects them to the login page.
 const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   return token ? children : <Navigate to="/login" />;
 };
 
 // Helper component 2: Handles routes that a logged-in user should NOT see.
 // If a user is already logged in, it redirects them to the dashboard.
 const AuthRedirect = ({ children }) => {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   return token ? <Navigate to="/dashboard" /> : children;
 };
 
