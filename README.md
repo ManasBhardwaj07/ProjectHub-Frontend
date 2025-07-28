@@ -1,5 +1,7 @@
 # 🎨 ProjectHub – Frontend
 
+🚀 **Live Demo:** [https://project-hub-frontend-mocha.vercel.app](https://project-hub-frontend-mocha.vercel.app)
+
 This is the **frontend** for **ProjectHub**, a beautiful real-time project and task collaboration platform built with **React.js** and styled using **TailwindCSS** and **Framer Motion**.
 
 ---
